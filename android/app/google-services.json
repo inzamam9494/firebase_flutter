@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "288348494125",
+    "project_id": "dummy-c2b10",
+    "storage_bucket": "dummy-c2b10.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:288348494125:android:07e4cf8d14e1bc458a9ba4",
+        "android_client_info": {
+          "package_name": "com.growfuzion.firebase_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtTzG1t9AiSAl-cEwS_6AppHEGb6AGnCA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
