@@ -1,4 +1,6 @@
+import 'package:firebase_project/posts/post_screen.dart';
 import 'package:firebase_project/ui/auth/signUp_screen.dart';
+import 'package:firebase_project/utils/utils.dart';
 import 'package:firebase_project/widgets/round_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +14,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool loading = false;
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -26,10 +29,34 @@ class _LoginScreenState extends State<LoginScreen> {
     passwordController.dispose();
   }
 
+  void login() {
+    setState(() {
+      loading = true;
+    });
+    _auth
+        .signInWithEmailAndPassword(
+            email: emailController.text.toString(),
+            password: passwordController.text.toString())
+        .then((value) {
+      Utils().toastMessage(value.user!.email.toString());
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const PostScreen()));
+      setState(() {
+        loading = false;
+      });
+    }).onError((error, stackTrace) {
+      debugPrint(error.toString());
+      Utils().toastMessage(error.toString());
+      setState(() {
+        loading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: ()async{
+      onWillPop: () async {
         SystemNavigator.pop();
         return true;
       },
@@ -72,12 +99,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   )),
               RoundButton(
                 title: "Login",
+                loading: loading,
                 onTap: () {
-                 if( _formKey.currentState!.validate()){
-                   _auth.createUserWithEmailAndPassword(
-                       email: emailController.text.toString(),
-                       password: passwordController.text.toString());
-                 }
+                  if (_formKey.currentState!.validate()) {
+                    login();
+                  }
                 },
               ),
               const SizedBox(height: 30),

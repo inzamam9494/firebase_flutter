@@ -2,6 +2,7 @@ import 'package:firebase_project/ui/auth/login_screen.dart';
 import 'package:firebase_project/widgets/round_button.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../utils/utils.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -11,11 +12,32 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  bool loading = false;
   final _formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  void signUp() {
+    setState(() {
+      loading = true;
+    });
+    _auth
+        .createUserWithEmailAndPassword(
+            email: emailController.text.toString(),
+            password: passwordController.text.toString())
+        .then((value) {
+      setState(() {
+        loading = false;
+      });
+    }).onError((error, stackTrace) {
+      Utils().toastMessage(error.toString());
+      setState(() {
+        loading = false;
+      });
+    });
+  }
 
   @override
   void dispose() {
@@ -66,11 +88,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 )),
             RoundButton(
               title: "Sign Up",
+              loading: loading,
               onTap: () {
-                if(_formKey.currentState!.validate()){
-                  _auth.createUserWithEmailAndPassword(
-                      email: emailController.text.toString(),
-                      password: passwordController.text.toString());
+                if (_formKey.currentState!.validate()) {
+                  signUp();
                 }
               },
             ),
@@ -79,10 +100,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text("Already have an account?"),
-                TextButton(onPressed: () {
-                  Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()));
-                }, child: const Text("Login"))
+                TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginScreen()));
+                    },
+                    child: const Text("Login"))
               ],
             )
           ],
