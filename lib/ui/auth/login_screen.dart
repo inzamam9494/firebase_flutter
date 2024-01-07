@@ -94,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           return value!.isEmpty ? "Enter the Password" : null;
                         },
                       ),
-                      const SizedBox(height: 50)
+                      const SizedBox(height: 60)
                     ],
                   )),
               RoundButton(
